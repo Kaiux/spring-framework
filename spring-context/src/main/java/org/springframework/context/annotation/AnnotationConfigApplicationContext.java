@@ -63,7 +63,13 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		//首先调用父类构造方法
+		//创建一个读取注解Bean定义的读取器
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+
+		/**
+		 * 可以用来扫描包或者类，继而转成beanDefinition
+		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -84,7 +90,16 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
+		//调用无参构造函数
+		//实际上会先调用父类的无参构造函数
+		//bean工厂的初始化在父类构造函数中完成
 		this();
+		/**
+		 * this.beanDefinitionMap.put(beanName, beanDefinition)
+		 * 执行register之前，beanDefinitionMap中会有一些Spring自带的bean，可以调试查看
+		 * 执行register之后，放入我们传入AnnotationConfigApplicationContext中的AppConfig类
+		 * 调用refresh之后，放入我们自定义的bean
+		 */
 		register(componentClasses);
 		refresh();
 	}
